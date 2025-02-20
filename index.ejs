@@ -8,10 +8,6 @@
     <link rel="stylesheet" href="/public/style.css">
 </head>
 <body>
-    <nav class="navbar navbar-light bg-light mb-4">
-        <a class="navbar-brand mx-3" href="#">Library Management System</a>
-    </nav>
-    
     <div class="container">
         <h1 class="text-center mb-4">Library System</h1>
 
@@ -53,13 +49,13 @@
         <h2>Issue a Book</h2>
         <form action="/issues/add" method="post" class="mb-4">
             <div class="row g-2">
-                <div class="col-md-3">
+                <div class="col-md-4">
                     <input type="text" name="readerName" class="form-control" placeholder="Reader's Name" required>
                 </div>
-                <div class="col-md-3">
+                <div class="col-md-4">
                     <input type="number" name="readerId" class="form-control" placeholder="Reader's ID" required>
                 </div>
-                <div class="col-md-3">
+                <div class="col-md-4">
                     <select name="bookId" class="form-select" required>
                         <option value="">Select a Book</option>
                         <% books.forEach(book => { if (!book.issuedTo) { %>
@@ -67,18 +63,11 @@
                         <% } }); %>
                     </select>
                 </div>
-                <div class="col-md-3">
-                    <input type="date" name="issueDate" class="form-control" required>
-                </div>
-                <div class="col-md-3">
-                    <input type="date" name="dueDate" class="form-control" required>
-                </div>
                 <div class="col-md-12 text-center mt-2">
                     <button type="submit" class="btn btn-warning">Issue Book</button>
                 </div>
             </div>
         </form>
-        
 
         <!-- Book List -->
         <h2>Book List</h2>

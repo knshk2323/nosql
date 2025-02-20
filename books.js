@@ -59,7 +59,6 @@ router.post('/update/:id', async (req, res) => {
   }
 });
 
-
 // Учёт выдачи книги
 router.post('/issue/:id', async (req, res) => {
   try {
@@ -82,5 +81,35 @@ router.post('/issue/:id', async (req, res) => {
     res.status(500).send('Error issuing book');
   }
 });
+
+// Выдать книгу
+router.post('/issues/add', async (req, res) => {
+  try {
+    const { readerName, readerId, bookId } = req.body;
+
+    // Найти книгу по ID
+    const book = await Book.findById(bookId);
+    if (!book) {
+      return res.status(404).send('Book not found');
+    }
+
+    // Проверить, что книга не выдана
+    if (book.issuedTo) {
+      return res.status(400).send('Book is already issued');
+    }
+
+    // Обновить книгу, добавив информацию о выдаче
+    book.issuedTo = readerName;
+    book.issuedDate = new Date();
+    book.returnDate = new Date(new Date().setDate(new Date().getDate() + 14)); // Возврат через 14 дней
+
+    await book.save();
+    res.redirect('/books');
+  } catch (err) {
+    console.error('Error issuing book:', err);
+    res.status(500).send('Error issuing book');
+  }
+});
+
 
 module.exports = router;

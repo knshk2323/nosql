@@ -1,28 +1,44 @@
 const express = require('express');
 const router = express.Router();
-const mongoose = require('mongoose');
-const Issue = require('../models/Issue'); // Модель для коллекции issues
+const Book = require('../models/Book');
+const Issue = require('../models/Issue'); // Убедитесь, что эта модель существует
 
+// Выдача книги
 router.post('/add', async (req, res) => {
-  try {
-    const { bookId, readerId, issueDate, dueDate } = req.body;
+    try {
+        const { readerName, readerId, bookId } = req.body;
+        
+        // Проверяем, есть ли книга в базе данных
+        const book = await Book.findById(bookId);
+        if (!book) {
+            return res.status(404).send('Book not found');
+        }
 
-    const newIssue = new Issue({
-      bookId: new mongoose.Types.ObjectId(bookId),
-      readerId: new mongoose.Types.ObjectId(readerId),
-      issueDate: new Date(issueDate),
-      dueDate: new Date(dueDate),
-      returnDate: null,
-      status: 'issued'
-    });
+        // Проверяем, не выдана ли книга
+        if (book.issuedTo) {
+            return res.status(400).send('Book is already issued');
+        }
 
-    await newIssue.save();
+        // Создаём запись о выдаче
+        const issue = new Issue({
+            readerName,
+            readerId,
+            bookId,
+            issueDate: new Date(),
+            returnDate: null
+        });
+        await issue.save();
 
-    res.redirect('/issues'); // Или куда тебе нужно
-  } catch (err) {
-    console.error(err);
-    res.status(500).send('Error issuing the book');
-  }
+        // Обновляем книгу, указывая, кому она выдана
+        book.issuedTo = readerName;
+        await book.save();
+
+        res.redirect('/books');
+    } catch (err) {
+        console.error('Error issuing book:', err);
+        res.status(500).send('Error issuing book');
+    }
 });
 
 module.exports = router;
+

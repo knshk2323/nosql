@@ -19,7 +19,9 @@ app.use(express.urlencoded({ extended: true }));
 // Подключение статических файлов (CSS и т.д.)
 app.use(express.static(path.join(__dirname, 'public')));
 
-
+app.get('/', (req, res) => {
+    res.redirect('/books');
+  }); 
 // Подключение к MongoDB
 mongoose.connect('mongodb://127.0.0.1:27017/library', { useNewUrlParser: true, useUnifiedTopology: true })
   .then(() => console.log('Connected to MongoDB'))
