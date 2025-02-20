@@ -37,10 +37,7 @@ app.use('/books', bookRoutes);
 app.use('/readers', readerRoutes);
 app.use('/issues', issueRoutes);
 
-// Главная страница
-app.get('/', (req, res) => {
-  res.render('index');
-});
+
 
 // Запуск сервера
 app.listen(PORT, () => {

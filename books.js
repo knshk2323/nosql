@@ -27,14 +27,20 @@ router.get('/', async (req, res) => {
 // Добавить книгу
 router.post('/add', async (req, res) => {
   try {
-    const { title, author, genre } = req.body;
-    await Book.create({ title, author, genre });
-    res.redirect('/books');
+      console.log('Received data:', req.body); // Лог для проверки
+      const { title, author, genre } = req.body;
+      if (!title || !author || !genre) {
+          return res.status(400).send('Missing required fields');
+      }
+
+      await Book.create({ title, author, genre });
+      res.redirect('/books');
   } catch (err) {
-    console.error('Error adding book:', err);
-    res.status(500).send('Error adding book');
+      console.error('Error adding book:', err);
+      res.status(500).send('Error adding book');
   }
 });
+
 
 // Удалить книгу
 router.post('/delete/:id', async (req, res) => {

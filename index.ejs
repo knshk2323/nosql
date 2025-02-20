@@ -6,6 +6,56 @@
     <title>Library Management System</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="/public/style.css">
+    <style>
+        body {
+            background-color: #f5e6d7;
+            color: #5a3e2b;
+            font-family: 'Arial', sans-serif;
+        }
+        .container {
+            max-width: 800px;
+            margin: auto;
+            padding-top: 20px;
+        }
+        .btn-custom {
+            background-color: #8b5e3c;
+            color: white;
+            border-radius: 8px;
+            transition: 0.3s;
+        }
+        .btn-custom:hover {
+            background-color: #6f432a;
+        }
+        .table thead {
+            background-color: #8b5e3c;
+            color: white;
+        }
+        .card {
+            background-color: #fdf6eb;
+            border-radius: 10px;
+            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+            padding: 15px;
+            margin-bottom: 15px;
+        }
+        .form-control, .form-select {
+            background-color: #fffaf0;
+            border: 1px solid #8b5e3c;
+            color: #5a3e2b;
+            border-radius: 6px;
+        }
+
+        .btn-brown {
+            background-color: #8B4513; /* Коричневый цвет */
+            border-color: #6A2C0F; /* Темнее для границы */
+            color: white; /* Белый текст */
+        }
+        
+        .btn-brown:hover {
+            background-color: #A0522D; /* Светло-коричневый при наведении */
+            border-color: #733D1A;
+        }
+        
+    </style>
 </head>
 <body>
     <div class="container">
@@ -21,7 +71,7 @@
                     <input type="text" name="genre" class="form-control" placeholder="Genre">
                 </div>
                 <div class="col-md-2">
-                    <button type="submit" class="btn btn-primary w-100">Search</button>
+                    <button type="submit" class="btn btn-brown w-100 rounded shadow-sm">Search</button>
                 </div>
             </div>
         </form>
@@ -44,10 +94,10 @@
           <option value="History">History</option>
           <option value="Fantasy">Fantasy</option>
         </select>
-      </div>
-      <div class="col-md-12 text-center mt-2">
-        <button type="submit" class="btn btn-success">Add Book</button>
-      </div>
+        </div>
+        <div class="col-md-12 text-center mt-2">
+            <button type="submit" class="btn btn-brown w-100 rounded shadow-sm">Add Book</button>
+        </div>
     </div>
   </form>
 
@@ -70,7 +120,7 @@
                     </select>
                 </div>
                 <div class="col-md-12 text-center mt-2">
-                    <button type="submit" class="btn btn-warning">Issue Book</button>
+                    <button type="submit" class="btn btn-brown w-100 rounded shadow-sm">Issue Book</button>
                 </div>
             </div>
         </form>
@@ -91,15 +141,15 @@
                             </p>
                             <!-- Добавляем кнопку для возврата книги -->
                             <form action="/books/return/<%= book._id %>" method="post" class="d-inline">
-                                <button type="submit" class="btn btn-warning btn-sm">Return Book</button>
+                                <button type="submit" class="btn btn-brown btn-sm rounded shadow-sm px-3">Return Book</button>
                             </form>
                         <% } %>
                     </div>
                     <div>
                         <form action="/books/delete/<%= book._id %>" method="post" class="d-inline">
-                            <button type="submit" class="btn btn-danger btn-sm">Delete</button>
+                            <button type="submit" class="btn btn-brown btn-sm rounded shadow-sm px-3">Delete</button>
                         </form>
-                        <button class="btn btn-outline-secondary btn-sm" 
+                        <button class="btn btn-brown btn-sm rounded shadow-sm px-3" 
                                 onclick="showEditForm('<%= book._id %>', '<%= book.title %>', '<%= book.author %>', '<%= book.genre %>')">
                             Edit
                         </button>
@@ -152,6 +202,30 @@
         function hideEditForm() {
             document.getElementById('editForm').style.display = 'none';
         }
+        document.getElementById('addBookForm').addEventListener('submit', async function(event) {
+            event.preventDefault(); // Предотвращаем стандартную отправку формы
+        
+            const title = document.getElementById('title').value.trim();
+            const author = document.getElementById('author').value.trim();
+            const genre = document.getElementById('genre').value;
+        
+            if (!title || !author) {
+                alert('Please fill in all fields!');
+                return;
+            }
+        
+            const response = await fetch('/books/add', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ title, author, genre })
+            });
+        
+            if (response.ok) {
+                location.reload(); // Обновляем страницу, чтобы увидеть новую книгу
+            } else {
+                alert('Failed to add book.');
+            }
+        });
     </script>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
