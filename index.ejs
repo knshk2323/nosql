@@ -85,18 +85,29 @@
                         <small class="text-muted">by <%= book.author %></small>
                         <p class="mb-1 text-muted">Genre: <%= book.genre %></p>
                         <% if (book.issuedTo) { %>
-                            <p class="text-danger mb-0">Issued to: <%= book.issuedTo %>, Return by: <%= book.returnDate ? book.returnDate.toLocaleDateString() : 'N/A' %></p>
+                            <p class="text-danger mb-0">
+                                Issued to: <%= book.issuedTo %>, Return by: 
+                                <%= book.returnDate ? book.returnDate.toLocaleDateString() : 'N/A' %>
+                            </p>
+                            <!-- Добавляем кнопку для возврата книги -->
+                            <form action="/books/return/<%= book._id %>" method="post" class="d-inline">
+                                <button type="submit" class="btn btn-warning btn-sm">Return Book</button>
+                            </form>
                         <% } %>
                     </div>
                     <div>
                         <form action="/books/delete/<%= book._id %>" method="post" class="d-inline">
                             <button type="submit" class="btn btn-danger btn-sm">Delete</button>
                         </form>
-                        <button class="btn btn-outline-secondary btn-sm" onclick="showEditForm('<%= book._id %>', '<%= book.title %>', '<%= book.author %>', '<%= book.genre %>')">Edit</button>
+                        <button class="btn btn-outline-secondary btn-sm" 
+                                onclick="showEditForm('<%= book._id %>', '<%= book.title %>', '<%= book.author %>', '<%= book.genre %>')">
+                            Edit
+                        </button>
                     </div>
                 </div>
             <% }); %>
         </div>
+        
 
         <!-- Edit Book Form -->
         <div id="editForm" style="display:none; margin-top: 20px;">
